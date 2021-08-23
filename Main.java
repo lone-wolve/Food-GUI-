@@ -1,26 +1,33 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Main extends Application {
 
@@ -46,10 +53,12 @@ public class Main extends Application {
     CheckBox CheckBox8;
     CheckBox CheckBox9;
 
-
+    //Text Area
     TextArea OutputTextArea;
+  //Array list to insert selected items
 
     ArrayList<String> SelectedList= new ArrayList<>();
+      Boolean isOrdered= false;
 
 
 
@@ -85,13 +94,17 @@ public class Main extends Application {
 
 
         Button OrderBtn = new Button();
+        Button RefreshButton = new Button();
+        Button Save = new Button();
+        RefreshButton.setText("Refresh");
         OrderBtn.setText("Oder");
-        OrderBtn.setOnAction(e-> OrderBtn_Click() );
-        VBox PaneButton = new VBox(OrderBtn);
+        Save.setText("Save");
+        OrderBtn.setOnAction(e -> OderBtn_Click());
+        RefreshButton.setOnAction(e -> RefreshButton_Clicked());
+       RefreshButton.setOnAction(e -> RefreshButton_Clicked());
+
+        HBox PaneButton = new HBox(10,OrderBtn,RefreshButton, Save);
         PaneButton.setAlignment(Pos.BOTTOM_LEFT);
-        
-
-
 
 
 
@@ -101,27 +114,19 @@ public class Main extends Application {
        OutputTextAreaa.setPrefWidth(500);
        OutputTextAreaa.setPrefHeight(250);
 
-
         HBox paneBottom = new HBox(10, OutputTextAreaa);
         paneBottom.setSpacing(10);
         paneBottom.setAlignment(Pos.BASELINE_CENTER);
         paneBottom.setPadding(new Insets(50));
 
-
         HBox PaneOder = new HBox( 50,Pane_Categorie1,Pane_Categorie2, pane_Categorie3,PaneButton);
 //
         VBox PaneCentre  = new VBox(PaneOder);
-        PaneCentre.setPadding(new Insets(20,70,20,150));
-
+        PaneCentre.setPadding(new Insets(20,50,20,75));
 
        BorderPane Painmain = new BorderPane();
        Painmain.setCenter(PaneCentre);
        Painmain.setBottom(paneBottom);
-
-
-
-
-
 
 
 //        Ui for category one
@@ -140,82 +145,118 @@ public class Main extends Application {
         stage.show();
     }
 
-    private void OrderBtn_Click() {
+    private void RefreshButton_Clicked() {
 
-        String Selected_ = "";
-        double price_of_Selected = 0;
+        CheckBox1.setSelected(false);
+        CheckBox2.setSelected(false);
+        CheckBox3.setSelected(false);
+        CheckBox4.setSelected(false);
+        CheckBox5.setSelected(false);
+        CheckBox6.setSelected(false);
+        CheckBox7.setSelected(false);
+        CheckBox8.setSelected(false);
+        CheckBox9.setSelected(false);
+        OutputTextArea.clear();
 
-       double Total= 0;
-        String newLine = "\n";
-        String Tab = "\t";
+}
+
+    private void OderBtn_Click() {
 
 
 
+            String Selected_ = "";
 
-        if (CheckBox1.isSelected()) {
-           Selected_= CheckBox1.getText();
-           SelectedList.add(Selected_);
-           Total= 40;
 
-       }
-        if (CheckBox2.isSelected()) {
-            Selected_= CheckBox2.getText();
-            SelectedList.add(Selected_);
-            Total= Total + 60;
+            double Total = 0;
+            String newLine = "\n";
+            String tTab = "\t";
+
+
+            if (CheckBox1.isSelected()) {
+                Selected_ = CheckBox1.getText();
+                SelectedList.add(Selected_);
+                Total = 40;
+
+            }
+            if (CheckBox2.isSelected()) {
+                Selected_ = CheckBox2.getText();
+                SelectedList.add(Selected_);
+                Total = Total + 60;
+            }
+
+            if (CheckBox3.isSelected()) {
+                Selected_ = CheckBox3.getText();
+                SelectedList.add(Selected_);
+                Total = Total + 80;
+            }
+            if (CheckBox4.isSelected()) {
+                Selected_ = CheckBox4.getText();
+                SelectedList.add(Selected_);
+                Total = Total + 100;
+
+            }
+            if (CheckBox5.isSelected()) {
+                Selected_ = CheckBox5.getText();
+                SelectedList.add(Selected_);
+                Total = Total + 100;
+
+            }
+            if (CheckBox6.isSelected()) {
+                Selected_ = CheckBox6.getText();
+                SelectedList.add(Selected_);
+                Total = Total + 75;
+
+
+            }
+
+            if (CheckBox7.isSelected()) {
+                Selected_ = CheckBox7.getText();
+                SelectedList.add(Selected_);
+                Total = Total + 50;
+
+            }
+            if (CheckBox8.isSelected()) {
+                Selected_ = CheckBox8.getText();
+                SelectedList.add(Selected_);
+                Total = Total + 75;
+
+            }
+            if (CheckBox9.isSelected()) {
+                Selected_ = CheckBox9.getText();
+                SelectedList.add(Selected_);
+
+
+                Total = Total + 50;
+
+            }
+        if (SelectedList.isEmpty()) {
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Erro message");
+            alert.setHeaderText("Erro Message");
+            alert.setContentText("Please select checkbox to Order");
+
+            alert.showAndWait();
         }
 
-        if (CheckBox3.isSelected()) {
-            Selected_= CheckBox3.getText();
-            SelectedList.add(Selected_);
-            Total= Total + 80;
-        }
-        if (CheckBox4.isSelected()) {
-            Selected_= CheckBox4.getText();
-            SelectedList.add(Selected_);
-            Total = Total+ 100;
+            StringBuffer sb = new StringBuffer();
 
-        }
-        if (CheckBox5.isSelected()) {
-            Selected_= CheckBox5.getText();
-            SelectedList.add(Selected_);
-            Total = Total+ 100;
+            for (String s : SelectedList) {
+                sb.append(s);
+                sb.append("\n");
+            }
+            String str = sb.toString();
+            isOrdered= true;
 
-        }
-        if (CheckBox6.isSelected()) {
-            Selected_= CheckBox6.getText();
-            SelectedList.add(Selected_);
-            Total = Total+ 75;
 
+            OutputTextArea.setText(str + newLine + " Your Total is " + Total + newLine +
+                    " Thank you for odering have a nice meal" + newLine);
 
 
 
 
         }
 
-        if (CheckBox7.isSelected()) {
-            Selected_= CheckBox7.getText();
-            SelectedList.add(Selected_);
-            Total = Total+ 50;
-
-        }
-        if (CheckBox8.isSelected()) {
-            Selected_= CheckBox1.getText();
-            SelectedList.add(Selected_);
-            Total = Total+ 75;
-
-        }
-        if (CheckBox9.isSelected()) {
-            Selected_= CheckBox1.getText();
-            SelectedList.add(Selected_);
-
-            Total = Total+ 50;
-
-        }
-
-
-
-            OutputTextArea.setText( SelectedList.toString()+ Tab + newLine+  " Your Total is " + Total + newLine+
-                    " Thank you for odering have a nice meal");
 
 
 
@@ -223,10 +264,18 @@ public class Main extends Application {
 
 
 
-    }
 
 
-    public static void main(String[] args) {
+
+
+
+
+
+
+
+
+
+        public static void main(String[] args) {
         launch(args);
     }
 }
